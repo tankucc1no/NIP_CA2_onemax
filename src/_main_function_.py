@@ -7,10 +7,7 @@ import numpy as np
 def generate(gen_num):
     population_list = []
     for i in range(gen_num):
-        individual = []
-        for j in range(C_LENGTH):
-            individual.append(random.randint(0, 1))
-
+        individual = np.random.randint(2, size=C_LENGTH).tolist()
         population_list.append(individual)
 
     return population_list
