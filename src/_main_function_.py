@@ -9,11 +9,19 @@ def generate(gen_num):
     for i in range(gen_num):
         individual = np.random.randint(2, size=CHROMOSOME_LENGTH).tolist()
         population_list.append(individual)
+
     return population_list
 
 
 def fitness(individual):
     return sum(individual)
+
+
+def population_fitness(population):
+    pop_fitness = []
+    for i in population:
+        pop_fitness.append(fitness(i))
+    return pop_fitness
 
 
 # tour_size can not larger than population_length
@@ -24,7 +32,15 @@ def tournament(tour_size, population_list):
         tour_list.append(population_list[rd_num])
 
     parent = max(tour_list, key=lambda individual: fitness(individual)).copy()
+
     return parent
+
+
+# weakest tournament
+def weakest_tournament(population_list):
+    pop_fitness = population_fitness(population_list)
+    idx = np.argsort(pop_fitness)
+    return population_list[idx[0]]
 
 
 def crossover(i1, i2):
@@ -53,12 +69,23 @@ def replacement(population_list, individual):
         population_list[0] = individual
 
 
+# roulette wheel replacement
+def roulette_wheel_replacement(population_list, individual):
+    pop_fitness = population_fitness(population_list)
+    chance_of_being_selected = (np.array(pop_fitness)/sum(pop_fitness)).tolist()
+    select_rate = random.random()
+    i = 0
+    while select_rate - chance_of_being_selected[i] > 0:
+        select_rate -= chance_of_being_selected[i]
+        i += 1
+    population_list[i] = individual
+
+
 # to find out the max fitness in the population
 def get_population_max_fitness(population_list):
     return max(fitness(individual) for individual in population_list)
 
 
-# Tiankuo here
 def limited_crossover(chromosome_a, chromosome_b, cross_length=3):
     # Create children chromosomes
     chromosome_a, chromosome_b = chromosome_a.copy(), chromosome_b.copy()
@@ -85,29 +112,41 @@ if __name__ == '__main__':
             # generation
             pop_list = generate(POP_SIZE)
 
-            # tournament -- pick parents
+            # # tournament -- pick parents
+            # parent_list = []
+            # for i in range(tournament_size):
+            #     parent_list.append(tournament(3, pop_list))
+
+            # weakest tournament
             parent_list = []
             for i in range(tournament_size):
-                parent_list.append(tournament(3, pop_list))
+                parent_list.append(weakest_tournament(pop_list))
 
             # # crossover
             # child_list = []
             # for i in range(0, len(parent_list), 2):
             #     child_list.extend(crossover(parent_list[i], parent_list[i + 1]))
 
-            # limited crossover
-            child_list = []
-            for i in range(0, len(parent_list), 2):
-                child_list.extend(limited_crossover(parent_list[i], parent_list[i + 1], 10))
+            # # limited crossover
+            # child_list = []
+            # for i in range(0, len(parent_list), 2):
+            #     child_list.extend(limited_crossover(parent_list[i], parent_list[i + 1], 10))
+
+            # cancel crossover
+            child_list = parent_list
 
             # mutation
             mu_child_list = []
             for child in child_list:
-                mu_child_list.append(mutate(child, size=2))
+                mu_child_list.append(mutate(child, size=1))
 
-            # replacement
+            # # replacement
+            # for mu_child in mu_child_list:
+            #     replacement(pop_list, mu_child)
+
+            # roulette_wheel_replacement
             for mu_child in mu_child_list:
-                replacement(pop_list, mu_child)
+                roulette_wheel_replacement(pop_list, mu_child)
 
             # get_population_max_fitness
             max_population_fitness = get_population_max_fitness(pop_list)
