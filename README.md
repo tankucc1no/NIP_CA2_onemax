@@ -12,7 +12,6 @@ This module first generates the parameters in the inside EA through the outside 
 the inside EA. The mean of looping times and success rates for the inside EA are passed as feedback to the outside EA, which
 evolves the parameters of the inside EA.
 
-The file includes the OneMax.py script.
 
 ## How to use
 The script has three main functions.
@@ -23,7 +22,7 @@ This function use the EA in EA to solve the problem, and will return 'result', w
 ### result_test()
 To run this, change the parameters in the function. Then you can test the perfomence of the parameters combination.
 
-### small_scale
+### small_scale()
 The script takes no command line arguments.  
 This function will search the best parameters combination around the combination you have got in function EA_in_EA().
 
