@@ -23,7 +23,7 @@ This function use the EA in EA to solve the problem, and will return 'result', w
 To run this, change the parameters in the function. Then you can test the perfomence of the parameters combination.
 
 ### small_scale()
-The script takes no command line arguments.  
+The finction takes no command line arguments.  
 This function will search the best parameters combination around the combination you have got in function EA_in_EA().
 
 # modified_main_function_.py
