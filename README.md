@@ -1,5 +1,5 @@
-# NIP_CA2_onemax
-This is a teamwork.
+# worst_onemax_using_double_evolutionary-algorithm
+
 ## Goals
 Design a generational evolutionary algorithm which solves the 1-MAX problem of size 15 in at least 95 runs out of 100, converging
 in less than 1000 generations but taking as many generations as possible to converge.
